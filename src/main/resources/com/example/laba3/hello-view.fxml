@@ -4,57 +4,40 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.laba3.HelloController">
-    <bottom>
-        <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
-            <children>
-                <HBox alignment="CENTER" spacing="15.0">
-                    <children>
-                        <Button fx:id="btnFirst" style="-fx-font-size: 16;" text="⏮" />
-                        <Button fx:id="btnPrev" style="-fx-font-size: 16;" text="◀" />
-                        <Button fx:id="btnPlay" style="-fx-font-size: 16;" text="▶" />
-                        <Button fx:id="btnNext" style="-fx-font-size: 16;" text="▶" />
-                        <Button fx:id="btnLast" style="-fx-font-size: 16;" text="⏭" />
-                        <Button fx:id="btnEffect" style="-fx-font-size: 14;" text="эффект" />
-                    </children>
-                </HBox>
-                <HBox alignment="CENTER" spacing="25.0">
-                    <children>
-                        <Label fx:id="lblPosition" text="0 из 0">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="lblFileName" text="null">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="lblFileInfo" text="">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Label>
-                        <Label fx:id="lblEffect" text="эффект: Fade">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Label>
-                    </children>
-                </HBox>
-            </children>
-            <padding>
-                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-            </padding>
-        </VBox>
-    </bottom>
+<BorderPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #1a1e2b;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.laba3.HelloController">
     <center>
-        <StackPane fx:id="imageContainer" style="-fx-background-color: #2b2b2b;" BorderPane.alignment="CENTER">
+        <StackPane fx:id="imageContainer" style="-fx-background-color: #0f1219;" BorderPane.alignment="CENTER">
             <children>
                 <ImageView fx:id="imageView" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER" />
             </children>
         </StackPane>
     </center>
+    <bottom>
+        <VBox alignment="CENTER" spacing="15.0" style="-fx-background-color: #252b3d;" BorderPane.alignment="CENTER">
+            <children>
+                <HBox alignment="CENTER" spacing="12.0">
+                    <children>
+                        <Button fx:id="btnFirst" style="-fx-background-color: #3d4b6a; -fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold; -fx-background-radius: 12; -fx-padding: 12 20;" text="««" />
+                        <Button fx:id="btnPrev" style="-fx-background-color: #4a5b7e; -fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold; -fx-background-radius: 12; -fx-padding: 12 25;" text="«" />
+                        <Button fx:id="btnPlay" style="-fx-background-color: #5d9b5d; -fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 12 30;" text="▶" />
+                        <Button fx:id="btnNext" style="-fx-background-color: #4a5b7e; -fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold; -fx-background-radius: 12; -fx-padding: 12 25;" text="»" />
+                        <Button fx:id="btnLast" style="-fx-background-color: #3d4b6a; -fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold; -fx-background-radius: 12; -fx-padding: 12 20;" text="»»" />
+                        <Button fx:id="btnEffect" style="-fx-background-color: #b38b5d; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-background-radius: 12; -fx-padding: 12 20;" text="⚡ Эффект" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" spacing="25.0">
+                    <children>
+                        <Label fx:id="lblPosition" style="-fx-background-color: #2d3345; -fx-text-fill: #aab3cc; -fx-padding: 6 18; -fx-background-radius: 20;" text="0 из 0" />
+                        <Label fx:id="lblFileName" style="-fx-text-fill: #e0e4f0;" text="нет картинки" />
+                        <Label fx:id="lblFileInfo" style="-fx-text-fill: #8f9bb3;" text="" />
+                        <Label fx:id="lblEffect" style="-fx-background-color: #b38b5d; -fx-text-fill: white; -fx-padding: 6 18; -fx-background-radius: 20;" text="Эффект: Вспышка" />
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+        </VBox>
+    </bottom>
 </BorderPane>

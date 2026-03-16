@@ -1,9 +1,6 @@
 package com.example.laba3;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
-import javafx.animation.RotateTransition;
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -20,7 +17,7 @@ public class HelloController implements Initializable {
     @FXML
     private ImageView imageView;
     @FXML
-    private Button btnPrev, btnNext, btnFirst, btnLast, btnEffect, btnPlay;
+    private Button btnFirst, btnPrev, btnNext, btnLast, btnEffect, btnPlay;
     @FXML
     private Label lblPosition, lblFileName, lblFileInfo, lblEffect;
     @FXML
@@ -32,12 +29,20 @@ public class HelloController implements Initializable {
     private boolean isPlaying = false;
     private Thread slideshowThread;
     private int currentEffect = 0;
-    private final String[] EFFECT_NAMES = {"Fade", "Scale", "Translate", "Rotate"};
+
+    private final String[] EFFECT_NAMES = {
+            " Вспышка",
+            " Полный оборот",
+            " Свайп"
+    };
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         imageLoader = new ImageLoader();
         imageView.setPreserveRatio(true);
+
+        imageView.fitWidthProperty().bind(imageContainer.widthProperty());
+        imageView.fitHeightProperty().bind(imageContainer.heightProperty());
 
         File imagesDir = new File("images");
         if (imagesDir.exists() && imagesDir.isDirectory()) {
@@ -48,18 +53,15 @@ public class HelloController implements Initializable {
 
         setupButtonHandlers();
         updateEffectLabel();
-
-        imageContainer.widthProperty().addListener((obs, oldVal, newVal) -> resizeImage());
-        imageContainer.heightProperty().addListener((obs, oldVal, newVal) -> resizeImage());
     }
 
     private void setupButtonHandlers() {
-        btnNext.setOnAction(e -> nextImage());
-        btnPrev.setOnAction(e -> previousImage());
-        btnFirst.setOnAction(e -> firstImage());
-        btnLast.setOnAction(e -> lastImage());
-        btnEffect.setOnAction(e -> switchEffect());
-        btnPlay.setOnAction(e -> toggleSlideshow());
+        btnNext.setOnAction(event -> nextImage());
+        btnPrev.setOnAction(event -> previousImage());
+        btnFirst.setOnAction(event -> firstImage());
+        btnLast.setOnAction(event -> lastImage());
+        btnEffect.setOnAction(event -> switchEffect());
+        btnPlay.setOnAction(event -> toggleSlideshow());
     }
 
     private void switchEffect() {
@@ -90,30 +92,11 @@ public class HelloController implements Initializable {
                 Image image = imageLoader.loadFromFile(currentFile);
                 if (image != null) {
                     imageView.setImage(image);
-                    resizeImage();
-                }
-            }
-        }
-    }
-
-    private void resizeImage() {
-        if (imageView.getImage() != null) {
-            double containerWidth = imageContainer.getWidth();
-            double containerHeight = imageContainer.getHeight();
-
-            if (containerWidth > 0 && containerHeight > 0) {
-                Image img = imageView.getImage();
-                double imgWidth = img.getWidth();
-                double imgHeight = img.getHeight();
-                double containerRatio = containerWidth / containerHeight;
-                double imageRatio = imgWidth / imgHeight;
-
-                if (imageRatio > containerRatio) {
-                    imageView.setFitWidth(containerWidth);
-                    imageView.setFitHeight(0);
-                } else {
-                    imageView.setFitHeight(containerHeight);
-                    imageView.setFitWidth(0);
+                    imageContainer.setRotate(0);
+                    imageContainer.setScaleX(1);
+                    imageContainer.setScaleY(1);
+                    imageContainer.setTranslateX(0);
+                    imageContainer.setOpacity(1.0);
                 }
             }
         }
@@ -121,7 +104,7 @@ public class HelloController implements Initializable {
 
     private void nextImage() {
         if (iterator != null && iterator.hasNext()) {
-            applyCurrentEffect();
+            applyEffect();
             iterator.next();
             displayCurrentImage();
             updateInfo();
@@ -130,7 +113,7 @@ public class HelloController implements Initializable {
 
     private void previousImage() {
         if (iterator != null && iterator.hasPrevious()) {
-            applyCurrentEffect();
+            applyEffect();
             iterator.previous();
             displayCurrentImage();
             updateInfo();
@@ -139,7 +122,7 @@ public class HelloController implements Initializable {
 
     private void firstImage() {
         if (iterator != null && imageCollection != null && !imageCollection.isEmpty()) {
-            applyCurrentEffect();
+            applyEffect();
             iterator.goToFirst();
             displayCurrentImage();
             updateInfo();
@@ -148,42 +131,70 @@ public class HelloController implements Initializable {
 
     private void lastImage() {
         if (iterator != null && imageCollection != null && !imageCollection.isEmpty()) {
-            applyCurrentEffect();
+            applyEffect();
             iterator.goToLast();
             displayCurrentImage();
             updateInfo();
         }
     }
 
-    private void applyCurrentEffect() {
+    private void applyEffect() {
         switch (currentEffect) {
             case 0:
-                FadeTransition ft = new FadeTransition(Duration.millis(500), imageView);
-                ft.setFromValue(0.0);
-                ft.setToValue(1.0);
-                ft.play();
+                flashEffect();
                 break;
             case 1:
-                ScaleTransition st = new ScaleTransition(Duration.millis(500), imageView);
-                st.setFromX(0.7);
-                st.setFromY(0.7);
-                st.setToX(1.0);
-                st.setToY(1.0);
-                st.play();
+                rotateEffect();
                 break;
             case 2:
-                TranslateTransition tt = new TranslateTransition(Duration.millis(400), imageView);
-                tt.setFromX(50);
-                tt.setToX(0);
-                tt.play();
-                break;
-            case 3:
-                RotateTransition rt = new RotateTransition(Duration.millis(500), imageView);
-                rt.setFromAngle(-15);
-                rt.setToAngle(0);
-                rt.play();
+                swipeEffect();
                 break;
         }
+    }
+
+    private void flashEffect() {
+        ParallelTransition pt = new ParallelTransition(imageContainer);
+
+        FadeTransition ft = new FadeTransition(Duration.millis(300), imageContainer);
+        ft.setFromValue(0.0);
+        ft.setToValue(1.0);
+
+        ScaleTransition st = new ScaleTransition(Duration.millis(300), imageContainer);
+        st.setFromX(1.2);
+        st.setFromY(1.2);
+        st.setToX(1.0);
+        st.setToY(1.0);
+
+        pt.getChildren().addAll(ft, st);
+        pt.play();
+    }
+
+    private void rotateEffect() {
+        RotateTransition rt = new RotateTransition(Duration.millis(600), imageContainer);
+        rt.setFromAngle(0);
+        rt.setToAngle(360);
+        rt.setInterpolator(Interpolator.EASE_BOTH);
+        rt.play();
+    }
+
+    private void swipeEffect() {
+        boolean fromRight = Math.random() > 0.5;
+
+        TranslateTransition tt = new TranslateTransition(Duration.millis(400), imageContainer);
+        if (fromRight) {
+            tt.setFromX(100);
+        } else {
+            tt.setFromX(-100);
+        }
+        tt.setToX(0);
+
+        FadeTransition ft = new FadeTransition(Duration.millis(400), imageContainer);
+        ft.setFromValue(0.5);
+        ft.setToValue(1.0);
+
+        ParallelTransition pt = new ParallelTransition(imageContainer);
+        pt.getChildren().addAll(tt, ft);
+        pt.play();
     }
 
     private void updateInfo() {
@@ -238,7 +249,7 @@ public class HelloController implements Initializable {
         slideshowThread = new Thread(() -> {
             while (isPlaying) {
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(2000);
                     if (isPlaying) {
                         javafx.application.Platform.runLater(() -> nextImage());
                     }
